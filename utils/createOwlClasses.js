@@ -1,7 +1,10 @@
 const N3 = require('n3');
 const fs = require('fs');
 
-function createTriples(businessObjects) {
+function createTriples({
+	businessObjects = [''],
+	businessProcesses = [''],
+}) {
 	// Create a writer for Turtle format (easier to debug than RDF/XML)
 	const writer = new N3.Writer({ format: 'text/turtle' });
 
@@ -36,7 +39,7 @@ function createTriples(businessObjects) {
 		N3.DataFactory.namedNode('http://www.w3.org/2002/07/owl#Class')
 	);
 
-    // Define the BusinessProcess as an OWL class
+	// Define the BusinessProcess as an OWL class
 	writer.addQuad(
 		N3.DataFactory.namedNode(`${prefix}BusinessProcess`),
 		N3.DataFactory.namedNode(
@@ -56,6 +59,18 @@ function createTriples(businessObjects) {
 
 	// Remove duplicates
 	const uniqueBusinessObjects = [...new Set(validBusinessObjects)];
+
+	// Filter and clean the business processes array
+	const validBusinessProcesses = businessProcesses
+		.filter(
+			(obj) => obj && typeof obj === 'string' && obj.trim().length > 0
+		)
+		.map((obj) => obj.trim())
+		.filter((obj) => obj !== 'undefined' && obj !== 'null')
+		.map((obj) => sanitizeClassName(obj));
+
+	// Remove duplicates
+	const uniqueBusinessProcesses = [...new Set(validBusinessProcesses)];
 
 	// Define subclasses for each business object
 	uniqueBusinessObjects.forEach((object) => {
@@ -78,6 +93,40 @@ function createTriples(businessObjects) {
 					'http://www.w3.org/2000/01/rdf-schema#subClassOf'
 				),
 				N3.DataFactory.namedNode(`${prefix}BusinessObject`)
+			);
+
+			// Add a label for better readability
+			writer.addQuad(
+				N3.DataFactory.namedNode(`${prefix}${object}`),
+				N3.DataFactory.namedNode(
+					'http://www.w3.org/2000/01/rdf-schema#label'
+				),
+				N3.DataFactory.literal(object)
+			);
+		}
+	});
+
+    // Define subclasses for each business process
+	uniqueBusinessProcesses.forEach((object) => {
+		if (object && object.length > 0) {
+			// Declare the class
+			writer.addQuad(
+				N3.DataFactory.namedNode(`${prefix}${object}`),
+				N3.DataFactory.namedNode(
+					'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+				),
+				N3.DataFactory.namedNode(
+					'http://www.w3.org/2002/07/owl#Class'
+				)
+			);
+
+			// Make it a subclass of BusinessProcess
+			writer.addQuad(
+				N3.DataFactory.namedNode(`${prefix}${object}`),
+				N3.DataFactory.namedNode(
+					'http://www.w3.org/2000/01/rdf-schema#subClassOf'
+				),
+				N3.DataFactory.namedNode(`${prefix}BusinessProcess`)
 			);
 
 			// Add a label for better readability

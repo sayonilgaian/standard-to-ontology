@@ -21,10 +21,10 @@ async function main() {
 		}
 	}
 
-	createTriples(
-		Array.from(businessObjectMap.keys()),
-		Array.from(businessProcessMap.keys())
-	);
+	createTriples({
+		businessObjects: Array.from(businessObjectMap.keys()),
+		businessProcesses: Array.from(businessProcessMap.keys()),
+	});
 }
 
 main();
