@@ -28,6 +28,7 @@ async function main() {
 		businessObjects: Array.from(businessObjectMap.keys()),
 		businessProcesses: Array.from(businessProcessMap.keys()),
 		relations: businessProcessMap,
+		standardName: 'IRC37',
 	});
 }
 

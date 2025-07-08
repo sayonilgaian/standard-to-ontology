@@ -5,6 +5,7 @@ function createTriples({
 	businessObjects = [''],
 	businessProcesses = [''],
 	relations = new Map(),
+	standardName = '',
 }) {
 	const writer = new N3.Writer({ format: 'text/turtle' });
 
@@ -36,6 +37,23 @@ function createTriples({
 		N3.DataFactory.namedNode(`${prefix}BusinessProcess`),
 		N3.DataFactory.namedNode('rdf:type'),
 		N3.DataFactory.namedNode('owl:Class')
+	);
+	writer.addQuad(
+		N3.DataFactory.namedNode(`${prefix}${standardName}`),
+		N3.DataFactory.namedNode('rdf:type'),
+		N3.DataFactory.namedNode('owl:Class')
+	);
+
+	// standard link with business object and props main classes
+	writer.addQuad(
+		N3.DataFactory.namedNode(`${prefix}BusinessProcess`),
+		N3.DataFactory.namedNode('rdfs:subClassOf'),
+		N3.DataFactory.namedNode(`${prefix}${standardName}`)
+	);
+	writer.addQuad(
+		N3.DataFactory.namedNode(`${prefix}BusinessObject`),
+		N3.DataFactory.namedNode('rdfs:subClassOf'),
+		N3.DataFactory.namedNode(`${prefix}${standardName}`)
 	);
 
 	const validBusinessObjects = businessObjects
