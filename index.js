@@ -1,3 +1,4 @@
+// const boBpData = require('./data/test.json');
 const boBpData = require('./data/BPs.json');
 const { createTriples } = require('./utils/createOwlClasses.js');
 
@@ -15,6 +16,12 @@ async function main() {
 			businessObjectMap.set(businessObject, true);
 		}
 
+		element.subprocesses.forEach((subprocess) => {
+			if (!businessObjectMap.has(subprocess.object)) {
+				businessObjectMap.set(subprocess.object, true);
+			}
+		});
+
 		// add unique business processes
 		if (!businessProcessMap.has(businessProcess)) {
 			businessProcessMap.set(businessProcess, {
@@ -22,6 +29,15 @@ async function main() {
 				connectedBusinessObject: businessObject,
 			});
 		}
+
+		element.subprocesses.forEach((subprocess) => {
+			if (!businessProcessMap.has(subprocess.name)) {
+				businessProcessMap.set(subprocess.name, {
+					subprocesses: [],
+					connectedBusinessObject: subprocess.object,
+				});
+			}
+		});
 	}
 
 	createTriples({
