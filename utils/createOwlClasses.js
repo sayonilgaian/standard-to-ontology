@@ -36,6 +36,15 @@ function createTriples(businessObjects) {
 		N3.DataFactory.namedNode('http://www.w3.org/2002/07/owl#Class')
 	);
 
+    // Define the BusinessProcess as an OWL class
+	writer.addQuad(
+		N3.DataFactory.namedNode(`${prefix}BusinessProcess`),
+		N3.DataFactory.namedNode(
+			'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+		),
+		N3.DataFactory.namedNode('http://www.w3.org/2002/07/owl#Class')
+	);
+
 	// Filter and clean the business objects array
 	const validBusinessObjects = businessObjects
 		.filter(
