@@ -17,13 +17,17 @@ async function main() {
 
 		// add unique business processes
 		if (!businessProcessMap.has(businessProcess)) {
-			businessProcessMap.set(businessProcess, element.subprocesses);
+			businessProcessMap.set(businessProcess, {
+				subprocesses: element.subprocesses,
+				connectedBusinessObject: businessObject,
+			});
 		}
 	}
 
 	createTriples({
 		businessObjects: Array.from(businessObjectMap.keys()),
 		businessProcesses: Array.from(businessProcessMap.keys()),
+		relations: businessProcessMap,
 	});
 }
 
