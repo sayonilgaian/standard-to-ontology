@@ -48,8 +48,6 @@ function createTriples(businessObjects) {
 	// Remove duplicates
 	const uniqueBusinessObjects = [...new Set(validBusinessObjects)];
 
-	console.log('Processing business objects:', uniqueBusinessObjects);
-
 	// Define subclasses for each business object
 	uniqueBusinessObjects.forEach((object) => {
 		if (object && object.length > 0) {
@@ -93,8 +91,6 @@ function createTriples(businessObjects) {
 			console.log(
 				'OWL ontology written to ontology.ttl in Turtle format'
 			);
-			console.log('Generated ontology preview:');
-			console.log(result.substring(0, 500) + '...');
 		}
 	});
 }
@@ -117,23 +113,5 @@ function sanitizeClassName(name) {
 		.join('');
 }
 
-// Example usage with sample data
-function testOntology() {
-	const sampleBusinessObjects = [
-		'Material',
-		'Equipment',
-		'Guidelines',
-		'Subgrade',
-		'Quality Control',
-		'Safety Protocol',
-		'Environmental Impact',
-		'Cost Analysis',
-		'Project Timeline',
-		'Resource Allocation',
-	];
-
-	createTriples(sampleBusinessObjects);
-}
-
 // Export both functions
-module.exports = { createTriples, testOntology };
+module.exports = { createTriples };
